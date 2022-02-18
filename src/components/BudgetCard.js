@@ -1,13 +1,19 @@
 import { Card, ProgressBar, Button, Stack } from "react-bootstrap";
 import { currencyFormatter } from "../utils";
 
-export default function BudgetCard({ name, amount, max, gray }) {
+export default function BudgetCard({
+    name,
+    amount,
+    max,
+    gray,
+    hideButtons,
+    onAddExpenseClick,
+}) {
     const classNames = [];
-    if(amount > max) {
-        classNames.push('bg-danger', 'bg-opacity-10');
-    }
-    else if(gray){
-        classNames.push('bg-light')
+    if (amount > max) {
+        classNames.push("bg-danger", "bg-opacity-10");
+    } else if (gray) {
+        classNames.push("bg-light");
     }
     return (
         <Card className={classNames}>
@@ -16,23 +22,37 @@ export default function BudgetCard({ name, amount, max, gray }) {
                     <div className="me-2">{name}</div>
                     <div className="d-flex align-items-baseline">
                         {currencyFormatter.format(amount)}
-                        <span className="text-muted fs-6 ms-1">
-                            /{currencyFormatter.format(max)}
-                        </span>
+                        {max && (
+                            <span className="text-muted fs-6 ms-1">
+                                /{currencyFormatter.format(max)}
+                            </span>
+                        )}
                     </div>
                 </Card.Title>
-                <ProgressBar
-                    className="rounded-pill"
-                    variant={getProgressBarVariant(amount, max)}
-                    min={0}
-                    max={max}
-                    now={amount}
-                />
+                {max && (
+                    <ProgressBar
+                        className="rounded-pill"
+                        variant={getProgressBarVariant(amount, max)}
+                        min={0}
+                        max={max}
+                        now={amount}
+                    />
+                )}
 
-                <Stack direction="horizontal" gap='2' className='mt-2'>
-                    <Button variant='outline-primary' className='ms-auto' >Add Expenses</Button>
-                    <Button variant='outline-secondary'>View Expenses</Button>
-                </Stack>
+                {!hideButtons && (
+                    <Stack direction="horizontal" gap="2" className="mt-2">
+                        <Button
+                            variant="outline-primary"
+                            className="ms-auto"
+                            onClick={onAddExpenseClick}
+                        >
+                            Add Expenses
+                        </Button>
+                        <Button variant="outline-secondary">
+                            View Expenses
+                        </Button>
+                    </Stack>
+                )}
             </Card.Body>
         </Card>
     );
